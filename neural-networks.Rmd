@@ -1,0 +1,56 @@
+output: github_document
+
+## Neuralnet tutorial: basic concepts
+Install the neuralnet package for R
+
+```{r} 
+install.packages('neuralnet')
+library("neuralnet")
+```
+
+Define training set
+
+```{r}
+traininginput <-  as.data.frame(runif(50, min=0, max=100))
+trainingoutput <- sqrt(traininginput)
+
+trainingdata <- cbind(traininginput,trainingoutput)
+colnames(trainingdata) <- c("Input","Output")
+```
+
+Train the neural network
+
+```{r}
+net.sqrt <- neuralnet(Output~Input,trainingdata, hidden=1, threshold=0.01)
+print(net.sqrt)
+```
+
+Plot the neural network
+```{r}
+plot(net.sqrt)
+```
+
+Test the neural network on a validation set
+```{r}
+testdata <- as.data.frame((1:10)^2)
+net.results <- compute(net.sqrt, testdata)
+```
+
+Examine properties and results
+```{r}
+ls(net.results)
+
+print(net.results$net.result)
+ 
+cleanoutput <- cbind(testdata,sqrt(testdata),
+                         as.data.frame(net.results$net.result))
+colnames(cleanoutput) <- c("Input","Expected Output","Neural Net Output")
+print(cleanoutput)
+
+```
+
+This tutorial is based on the Gekkoquant tutorial on neural networks:
+http://gekkoquant.com/2012/05/26/neural-networks-with-r-simple-example/
+
+For additional resources, please see the Cambridge University short course on machine learning in R:
+https://bioinformatics-training.github.io/
